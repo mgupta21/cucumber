@@ -9,3 +9,9 @@ Feature: Feedback when entering invalid credit card details
     And all the other details are correct
     And I submit the form
     Then invalid card number error should be displayed
+
+  Scenario: Expiry Date must not be in the past
+    When I enter a card expiry date that's in the past
+    And all the other details are correct
+    And I submit the form
+    Then card expiration error should be displayed

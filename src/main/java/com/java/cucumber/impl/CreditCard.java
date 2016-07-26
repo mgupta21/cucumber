@@ -14,10 +14,10 @@ import java.time.format.DateTimeFormatter;
 public class CreditCard {
 
     private String holderName;
-    private int cardNumber;
+    private long cardNumber;
     private String expirationDate;
 
-    public void number(int number) {
+    public void number(long number) {
         this.cardNumber = number;
     }
 
@@ -44,7 +44,7 @@ public class CreditCard {
             throw new RuntimeException();
     }
 
-    private void validateCardNumber(int cardNumber) {
+    private void validateCardNumber(long cardNumber) {
         if ((1 + (int) Math.floor(Math.log10(cardNumber)) != 16)) {
             throw new InvalidCardNumberException();
         }
