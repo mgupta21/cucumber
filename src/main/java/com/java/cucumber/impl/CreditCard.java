@@ -16,6 +16,11 @@ public class CreditCard {
     private String holderName;
     private long cardNumber;
     private String expirationDate;
+    private Account account;
+
+    public CreditCard(Account account) {
+        this.account = account;
+    }
 
     public void number(long number) {
         this.cardNumber = number;
@@ -56,5 +61,14 @@ public class CreditCard {
         Period duration = Period.between(LocalDate.now(), date);
         if (duration.isNegative())
             throw new CardExpiredException();
+    }
+
+    public void withdraw(int amount) {
+        validateCard();
+        getAccount().withdraw(amount);
+    }
+
+    public Account getAccount() {
+        return account;
     }
 }
