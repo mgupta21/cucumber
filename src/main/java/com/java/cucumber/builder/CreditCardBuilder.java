@@ -29,6 +29,11 @@ public class CreditCardBuilder {
         return this;
     }
 
+    public CreditCardBuilder withCardNumber(int cardNumber) {
+        this.cardNumber = cardNumber;
+        return this;
+    }
+
     public CreditCardBuilder withCardPinNumber(int pin) {
         this.cardPinNumber = pin;
         return this;

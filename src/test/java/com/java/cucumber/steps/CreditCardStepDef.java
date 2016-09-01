@@ -20,10 +20,11 @@ import com.java.cucumber.impl.Store;
  */
 public class CreditCardStepDef {
 
-    private static final int PIN_NUMBER   = 1234;
-    private static Account   TEST_ACCOUNT = new AccountBuilder().build();
-    private Checkout         checkout     = new Checkout();
-    private CreditCard       card;
+    private static final int    PIN_NUMBER   = 1234;
+    private static final String EXPIRED_DATE = "20001010";
+    private static Account      TEST_ACCOUNT = new AccountBuilder().build();
+    private Checkout            checkout     = new Checkout();
+    private CreditCard          card;
 
     private void testSetup() {
         Store.addItem("banana", 40);
@@ -37,19 +38,14 @@ public class CreditCardStepDef {
         testSetup();
     }
 
-    @Given("^I am about to enter my credit card details$")
-    public void i_am_about_to_enter_my_credit_card_details() throws Throwable {
-        card = new CreditCardBuilder().withCardPinNumber(PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
-    }
-
     @When("^I enter a card number that's only four (\\d+) digits long$")
     public void i_enter_a_card_number_that_s_only_digits_long(int number) throws Throwable {
-        card.setCardNumber(number);
+        card = new CreditCardBuilder().withCardNumber(number).withCardPinNumber(PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
     }
 
     @When("^all the other details are correct$")
     public void all_the_other_details_are_correct() throws Throwable {
-        card.setExpirationDate("20200101");
+        // No-Opt
     }
 
     @When("^I submit the form$")
@@ -59,8 +55,7 @@ public class CreditCardStepDef {
 
     @When("^I enter a card expiry date that's in the past$")
     public void i_enter_a_card_expiry_date_that_s_in_the_past() throws Throwable {
-        card.setExpirationDate("20000101");
-        card.setCardNumber(9999999977777777L);
+        card = getExpiredCreditCard();
     }
 
     @Then("^invalid card number error should be displayed$")
@@ -87,7 +82,7 @@ public class CreditCardStepDef {
 
     @Given("^I have \\$(\\d+) in my account$")
     public void i_have_$_in_my_account(int amount) throws Throwable {
-        TEST_ACCOUNT = new Account("test", amount);
+        TEST_ACCOUNT = new AccountBuilder().withAccountBalance(amount).build();
     }
 
     @When("^I request \\$(\\d+)$")
@@ -102,7 +97,7 @@ public class CreditCardStepDef {
 
     @Given("^my card is invalid$")
     public void my_card_is_invalid() throws Throwable {
-        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).withExpirationDate("20001010").build();
+        card = getExpiredCreditCard();
     }
 
     @When("^I request \\$(\\d+) via invalid card$")
@@ -123,7 +118,11 @@ public class CreditCardStepDef {
 
     @Given("^my card is valid$")
     public void my_card_is_valid() throws Throwable {
-        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).withExpirationDate("20201010").build();
+        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).build();
+    }
+
+    private CreditCard getExpiredCreditCard() {
+        return new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).withExpirationDate(EXPIRED_DATE).build();
     }
 
     @When("^I request \\$(\\d+) via valid card$")
