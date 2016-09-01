@@ -6,6 +6,8 @@ import cucumber.api.java.en.When;
 
 import org.junit.Assert;
 
+import com.java.cucumber.builder.AccountBuilder;
+import com.java.cucumber.builder.CreditCardBuilder;
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.exceptions.InvalidCardNumberException;
 import com.java.cucumber.impl.Account;
@@ -16,11 +18,12 @@ import com.java.cucumber.impl.Store;
 /**
  * Created by mgupta on 7/25/16.
  */
-public class CreditCardSteps {
+public class CreditCardStepDef {
 
-    private Checkout   checkout = new Checkout();
-    private CreditCard card;
-    private Account    account;
+    private static final int PIN_NUMBER   = 1234;
+    private static Account   TEST_ACCOUNT = new AccountBuilder().build();
+    private Checkout         checkout     = new Checkout();
+    private CreditCard       card;
 
     private void testSetup() {
         Store.addItem("banana", 40);
@@ -36,18 +39,17 @@ public class CreditCardSteps {
 
     @Given("^I am about to enter my credit card details$")
     public void i_am_about_to_enter_my_credit_card_details() throws Throwable {
-        card = new CreditCard(new Account(0));
+        card = new CreditCardBuilder().withCardPinNumber(PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
     }
 
     @When("^I enter a card number that's only four (\\d+) digits long$")
     public void i_enter_a_card_number_that_s_only_digits_long(int number) throws Throwable {
-        card.number(number);
-        card.addExpiry("20200101");
+        card.setCardNumber(number);
     }
 
     @When("^all the other details are correct$")
     public void all_the_other_details_are_correct() throws Throwable {
-        card.addName("John Doe");
+        card.setExpirationDate("20200101");
     }
 
     @When("^I submit the form$")
@@ -57,8 +59,8 @@ public class CreditCardSteps {
 
     @When("^I enter a card expiry date that's in the past$")
     public void i_enter_a_card_expiry_date_that_s_in_the_past() throws Throwable {
-        card.addExpiry("20000101");
-        card.number(9999999977777777L);
+        card.setExpirationDate("20000101");
+        card.setCardNumber(9999999977777777L);
     }
 
     @Then("^invalid card number error should be displayed$")
@@ -85,37 +87,33 @@ public class CreditCardSteps {
 
     @Given("^I have \\$(\\d+) in my account$")
     public void i_have_$_in_my_account(int amount) throws Throwable {
-        account = new Account(amount);
+        TEST_ACCOUNT = new Account("test", amount);
     }
 
     @When("^I request \\$(\\d+)$")
     public void i_request_$(int amount) throws Throwable {
-        account.withdraw(amount);
+        TEST_ACCOUNT.withdraw(amount);
     }
 
     @Then("^\\$(\\d+) should be dispensed$")
     public void $_should_be_dispensed(int amount) throws Throwable {
-        Assert.assertEquals(80, account.getBalance());
+        Assert.assertEquals(80, TEST_ACCOUNT.getBalance());
     }
 
     @Given("^my card is invalid$")
     public void my_card_is_invalid() throws Throwable {
-        card = new CreditCard(account);
-        card.addName("test");
-        card.number(1234123412341234L);
-        card.addExpiry("20001010");
+        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).withExpirationDate("20001010").build();
     }
 
     @When("^I request \\$(\\d+) via invalid card$")
     public void i_request_$_via_card(int amount) throws Throwable {
         boolean flag = false;
         try {
-            card.withdraw(amount);
+            card.withdraw(amount, PIN_NUMBER);
         } catch (CardExpiredException e) {
             flag = true;
         }
         Assert.assertTrue(flag);
-
     }
 
     @Then("^I should get invalid card exception$")
@@ -125,15 +123,12 @@ public class CreditCardSteps {
 
     @Given("^my card is valid$")
     public void my_card_is_valid() throws Throwable {
-        card = new CreditCard(account);
-        card.addName("test");
-        card.number(1234123412341234L);
-        card.addExpiry("20201010");
+        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(PIN_NUMBER).withExpirationDate("20201010").build();
     }
 
     @When("^I request \\$(\\d+) via valid card$")
     public void i_request_$_via_valid_card(int amount) throws Throwable {
-        card.withdraw(amount);
+        card.withdraw(amount, PIN_NUMBER);
     }
 
     @Then("^I should get \\$(\\d+) withdrawn$")

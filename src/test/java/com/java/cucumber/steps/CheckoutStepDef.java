@@ -12,7 +12,7 @@ import com.java.cucumber.impl.Store;
 /**
  * Created by mgupta on 7/25/16.
  */
-public class CheckoutSteps {
+public class CheckoutStepDef {
 
     Checkout checkout = new Checkout();
 

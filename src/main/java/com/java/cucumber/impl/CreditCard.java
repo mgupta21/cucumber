@@ -12,24 +12,64 @@ import com.java.cucumber.exceptions.InvalidCardNumberException;
  */
 public class CreditCard {
 
-    private String  holderName;
+    private String  cardHolderName;
     private long    cardNumber;
     private String  expirationDate;
     private Account account;
 
-    public CreditCard(Account account) {
+    public CreditCard(Account account, long cardNumber, int cardPinNumber) {
         this.account = account;
+        this.cardHolderName = account.getAccountHolderName();
+        this.cardNumber = cardNumber;
+        this.expirationDate = generateDefaultExpirationDate();
+        addCreditCardToDataBase(cardNumber, cardPinNumber);
     }
 
-    public void number(long number) {
-        this.cardNumber = number;
+    public CreditCard(Account account, String cardHolderName, long cardNumber, int cardPinNumber, String expirationDate) {
+        this.account = account;
+        this.cardHolderName = cardHolderName;
+        this.cardNumber = cardNumber;
+        this.expirationDate = expirationDate;
+        addCreditCardToDataBase(cardNumber, cardPinNumber);
     }
 
-    public void addName(String name) {
-        this.holderName = name;
+    public void resetPin(int oldPinNumber, int newPinNumber) {
+        CreditCardMatcher.resetCreditCardNumber(this.cardNumber, oldPinNumber, newPinNumber);
     }
 
-    public void addExpiry(String expirationDate) {
+    public boolean isPinValid(int pinNumber) {
+        return CreditCardMatcher.isPinValid(this.cardNumber, pinNumber);
+    }
+
+    private void addCreditCardToDataBase(long cardNumber, int pinNumber) {
+        CreditCardMatcher.addCreditCard(cardNumber, pinNumber);
+    }
+
+    public long getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(long cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    private long generateCardNumber() {
+        return System.currentTimeMillis();
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -37,10 +77,15 @@ public class CreditCard {
         validateCard();
     }
 
-    private void validateCard() {
-        validateExpiration(expirationDate);
-        validateCardNumber(cardNumber);
-        validateCardName(holderName);
+    public void validateCard() {
+        validateExpiration(getExpirationDate());
+        validateCardNumber(getCardNumber());
+        validateCardName(getCardHolderName());
+    }
+
+    public void withdraw(int amount, int pinNumber) {
+        validateCard();
+        getAccount().withdraw(amount, this.cardNumber, pinNumber);
     }
 
     private void validateCardName(String holderName) {
@@ -62,12 +107,10 @@ public class CreditCard {
             throw new CardExpiredException();
     }
 
-    public void withdraw(int amount) {
-        validateCard();
-        getAccount().withdraw(amount);
-    }
+    private String generateDefaultExpirationDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate localDate = LocalDate.parse(LocalDate.now().plusYears(2).toString(), formatter);
+        return localDate.toString();
 
-    public Account getAccount() {
-        return account;
     }
 }
