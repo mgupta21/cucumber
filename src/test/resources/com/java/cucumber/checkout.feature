@@ -1,4 +1,4 @@
-Feature: Checkout
+Feature: Checkout features
 
   Scenario Outline: Checkout a bannana
     Given the price of a "banana" is 40c

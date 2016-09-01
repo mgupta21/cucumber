@@ -1,24 +1,26 @@
 package com.java.cucumber.steps;
 
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+import org.junit.Assert;
+
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.exceptions.InvalidCardNumberException;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.Checkout;
 import com.java.cucumber.impl.CreditCard;
 import com.java.cucumber.impl.Store;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.junit.Assert;
 
 /**
  * Created by mgupta on 7/25/16.
  */
 public class CreditCardSteps {
 
-    private Checkout checkout = new Checkout();
+    private Checkout   checkout = new Checkout();
     private CreditCard card;
-    private Account account;
+    private Account    account;
 
     private void testSetup() {
         Store.addItem("banana", 40);

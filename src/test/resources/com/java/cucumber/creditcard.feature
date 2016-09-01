@@ -1,4 +1,4 @@
-Feature: Feedback when entering invalid credit card details
+Feature: Feedback on entering credit card details
 
   Background:
     Given I have choosen some items to buy

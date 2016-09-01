@@ -1,23 +1,17 @@
 package com.java.cucumber.steps;
 
-import com.java.cucumber.impl.Checkout;
-import com.java.cucumber.impl.Store;
-import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.api.junit.Cucumber;
+
 import org.junit.Assert;
-import org.junit.runner.RunWith;
+
+import com.java.cucumber.impl.Checkout;
+import com.java.cucumber.impl.Store;
 
 /**
  * Created by mgupta on 7/25/16.
  */
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        format = {"pretty", "html:target/cucumber"},
-        features = "classpath:features/checkout.feature"
-)
 public class CheckoutSteps {
 
     Checkout checkout = new Checkout();

@@ -1,21 +1,20 @@
 package com.java.cucumber.impl;
 
-
-import com.java.cucumber.exceptions.CardExpiredException;
-import com.java.cucumber.exceptions.InvalidCardNumberException;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+
+import com.java.cucumber.exceptions.CardExpiredException;
+import com.java.cucumber.exceptions.InvalidCardNumberException;
 
 /**
  * Created by mgupta on 7/25/16.
  */
 public class CreditCard {
 
-    private String holderName;
-    private long cardNumber;
-    private String expirationDate;
+    private String  holderName;
+    private long    cardNumber;
+    private String  expirationDate;
     private Account account;
 
     public CreditCard(Account account) {
