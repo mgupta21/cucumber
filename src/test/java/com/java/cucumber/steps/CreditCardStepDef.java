@@ -1,7 +1,6 @@
 package com.java.cucumber.steps;
 
 import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -46,6 +45,26 @@ public class CreditCardStepDef {
         testSetup();
     }
 
+    @Given("^I have been issued a new card$")
+    public void iHaveBeenIssuedANewCard() throws Throwable {
+        card = new CreditCardBuilder().withCardPinNumber(TEST_PIN_NUMBER).build();
+    }
+
+    @Given("^I have \\$(\\d+) in my account$")
+    public void i_have_$_in_my_account(int amount) throws Throwable {
+        TEST_ACCOUNT = new AccountBuilder().withAccountBalance(amount).build();
+    }
+
+    @Given("^my card is valid$")
+    public void my_card_is_valid() throws Throwable {
+        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).build();
+    }
+
+    @Given("^my card is invalid$")
+    public void my_card_is_invalid() throws Throwable {
+        card = getExpiredCreditCard();
+    }
+
     @When("^I enter a card number that's only four (\\d+) digits long$")
     public void i_enter_a_card_number_that_s_only_digits_long(int number) throws Throwable {
         card = new CreditCardBuilder().withCardNumber(number).withCardPinNumber(TEST_PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
@@ -64,6 +83,37 @@ public class CreditCardStepDef {
     @When("^I enter a card expiry date that's in the past$")
     public void i_enter_a_card_expiry_date_that_s_in_the_past() throws Throwable {
         card = getExpiredCreditCard();
+    }
+
+    @When("^I request \\$(\\d+) via invalid card$")
+    public void i_request_$_via_card(int amount) throws Throwable {
+        boolean flag = false;
+        try {
+            card.withdraw(amount, TEST_PIN_NUMBER);
+        } catch (CardExpiredException e) {
+            flag = true;
+        }
+        Assert.assertTrue(flag);
+    }
+
+    @When("^I request \\$(\\d+) via valid card$")
+    public void i_request_$_via_valid_card(int amount) throws Throwable {
+        card.withdraw(amount, TEST_PIN_NUMBER);
+    }
+
+    @When("^I choose \"([^\"]*)\" from the menu$")
+    public void iChooseFromTheMenu(String arg0) throws Throwable {
+        // No-Opt
+    }
+
+    @When("^I insert the card, entering the correct PIN$")
+    public void iInsertTheCardEnteringTheCorrectPIN() throws Throwable {
+        Assert.assertTrue(card.isPinValid(TEST_PIN_NUMBER));
+    }
+
+    @When("^I change the PIN to (\\d+)$")
+    public void iChangeThePINTo(int pinNumber) throws Throwable {
+        card.resetPin(TEST_PIN_NUMBER, pinNumber);
     }
 
     @Then("^invalid card number error should be displayed$")
@@ -88,69 +138,18 @@ public class CreditCardStepDef {
         Assert.assertTrue(flag);
     }
 
-    @Given("^I have \\$(\\d+) in my account$")
-    public void i_have_$_in_my_account(int amount) throws Throwable {
-        TEST_ACCOUNT = new AccountBuilder().withAccountBalance(amount).build();
-    }
-
-    @Given("^my card is invalid$")
-    public void my_card_is_invalid() throws Throwable {
-        card = getExpiredCreditCard();
-    }
-
-    @When("^I request \\$(\\d+) via invalid card$")
-    public void i_request_$_via_card(int amount) throws Throwable {
-        boolean flag = false;
-        try {
-            card.withdraw(amount, TEST_PIN_NUMBER);
-        } catch (CardExpiredException e) {
-            flag = true;
-        }
-        Assert.assertTrue(flag);
-    }
-
     @Then("^I should get invalid card exception$")
     public void i_should_get_invalid_card_exception() throws Throwable {
         // Do Nothing
-    }
-
-    @Given("^my card is valid$")
-    public void my_card_is_valid() throws Throwable {
-        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).build();
     }
 
     private CreditCard getExpiredCreditCard() {
         return new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(EXPIRED_DATE).build();
     }
 
-    @When("^I request \\$(\\d+) via valid card$")
-    public void i_request_$_via_valid_card(int amount) throws Throwable {
-        card.withdraw(amount, TEST_PIN_NUMBER);
-    }
-
     @Then("^I should get \\$(\\d+) withdrawn$")
     public void i_should_get_$_withdrawn(int balance) throws Throwable {
         Assert.assertEquals(balance, card.getAccount().getBalance());
-    }
-
-    @Given("^I have been issued a new card$")
-    public void iHaveBeenIssuedANewCard() throws Throwable {
-        card = new CreditCardBuilder().withCardPinNumber(TEST_PIN_NUMBER).build();
-    }
-
-    @And("^I insert the card, entering the correct PIN$")
-    public void iInsertTheCardEnteringTheCorrectPIN() throws Throwable {
-        Assert.assertTrue(card.isPinValid(TEST_PIN_NUMBER));
-    }
-
-    @When("^I choose \"([^\"]*)\" from the menu$")
-    public void iChooseFromTheMenu(String arg0) throws Throwable {
-        // No-Opt
-    }
-
-    @And("^I change the PIN to (\\d+)$")
-    public void iChangeThePINTo(int pinNumber) throws Throwable {
-        card.resetPin(TEST_PIN_NUMBER, pinNumber);
     }
 
     @Then("^the system should remember my PIN is now (\\d+)$")
