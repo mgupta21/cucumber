@@ -12,7 +12,6 @@ Feature: Account feature
 #    Then I should see an error message
 #    And the balance of my account should be $100
 
-  @Ignore
   Scenario Outline: Withdraw fixed amount
     Given I have <Balance> in my account
     When I choose to withdraw the fixed amount of <withdrawal>

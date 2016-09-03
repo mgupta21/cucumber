@@ -33,8 +33,8 @@ public class CreditCard {
         this.account = account;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
-        addCreditCardToDataBase(cardNumber, cardPinNumber);
         newCardInfo();
+        addCreditCardToDataBase(cardNumber, cardPinNumber);
     }
 
     public long getCardNumber() {
