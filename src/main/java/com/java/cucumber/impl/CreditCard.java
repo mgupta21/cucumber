@@ -67,7 +67,6 @@ public class CreditCard {
         validateExpiration(getExpirationDate());
         if (CreditCardMatcher.isPinValid(cardNumber, pinNumber)) {
             getAccount().withdraw(amount);
-            logger.info("Successfully withdrew amount : " + amount);
         } else {
             logger.error("Invalid PIN. Incorrect pin number entered for credit card '" + cardNumber + "'");
         }

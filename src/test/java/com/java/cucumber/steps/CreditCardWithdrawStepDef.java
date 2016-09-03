@@ -1,8 +1,6 @@
 package com.java.cucumber.steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -108,10 +106,9 @@ public class CreditCardWithdrawStepDef {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
 
-    @And("^I have a card A (\\d+)L associated with my account$")
-    public void iHaveACardALAssociatedWithMyAccount(int arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
+	@Then("^Insufficient account balance warning is displayed$")
+	public void insufficientAccountBalanceWarningIsDisplayed() throws Throwable {
+		// No-Opt. Warning logged.
+	}
 
 }

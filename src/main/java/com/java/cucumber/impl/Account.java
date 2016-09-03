@@ -34,6 +34,7 @@ public class Account {
     public void withdraw(int amount) {
         if (hasSufficientBalance(amount)) {
             balance -= amount;
+            logger.info("Successfully withdrew amount : " + amount);
             return;
         }
         logger.warn("Transaction aborted. Insufficient balance. Current balance '" + balance + "' requested amount '" + amount + "'");
