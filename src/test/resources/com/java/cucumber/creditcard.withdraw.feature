@@ -3,7 +3,7 @@
 Feature: Withdraw money from account via creditcard
 
   Scenario: Unsuccessful attempt to withdrawal using invalid card
-    Given I have $100 in my account
+    Given I have $100 in my bank account
     But my card is invalid
     When I request $50 via invalid card
     Then I should get invalid card exception

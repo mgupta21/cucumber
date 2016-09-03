@@ -31,7 +31,7 @@ public class CreditCardWithdrawStepDef {
         CreditCardMatcher.clear();
     }
 
-    @Given("^I have \\$(\\d+) in my account$")
+    @Given("^I have \\$(\\d+) in my bank account$")
     public void i_have_$_in_my_account(int amount) throws Throwable {
         testAccount = new AccountBuilder().withAccountBalance(amount).build();
     }
@@ -106,9 +106,9 @@ public class CreditCardWithdrawStepDef {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
 
-	@Then("^Insufficient account balance warning is displayed$")
-	public void insufficientAccountBalanceWarningIsDisplayed() throws Throwable {
-		// No-Opt. Warning logged.
-	}
+    @Then("^Insufficient account balance warning is displayed$")
+    public void insufficientAccountBalanceWarningIsDisplayed() throws Throwable {
+        // No-Opt. Warning logged.
+    }
 
 }

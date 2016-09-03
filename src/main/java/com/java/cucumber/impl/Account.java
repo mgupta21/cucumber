@@ -31,13 +31,14 @@ public class Account {
         return accountHolderName;
     }
 
-    public void withdraw(int amount) {
+    public int withdraw(int amount) {
         if (hasSufficientBalance(amount)) {
             balance -= amount;
             logger.info("Successfully withdrew amount : " + amount);
-            return;
+            return amount;
         }
         logger.warn("Transaction aborted. Insufficient balance. Current balance '" + balance + "' requested amount '" + amount + "'");
+        return 0;
     }
 
     private boolean hasSufficientBalance(int amount) {

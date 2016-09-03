@@ -16,31 +16,31 @@ import com.java.cucumber.impl.Account;
 public class AccountStepDef {
 
     private static Account testAccount;
-    private int            initialBalance;
+    private int            amountWithdrew;
 
-    @Given("^I have balance of \\$(\\d+) in my account$")
-    public void i_have_$_in_my_account(int amount) throws Throwable {
-        initialBalance = amount;
+    @Given("^I have \\$(\\d+) in my account$")
+    public void iHaveBalanceInMyAccount(int amount) throws Throwable {
         testAccount = new AccountBuilder().withAccountBalance(amount).build();
     }
 
-    @When("^I request \\$(\\d+)$")
-    public void i_request_$(int amount) throws Throwable {
-        testAccount.withdraw(amount);
+    @When("^I choose to withdraw the fixed amount of \\$(\\d+)$")
+    public void iChooseToWithdrawTheFixedAmountOfWithdrawal(int amount) throws Throwable {
+        amountWithdrew = testAccount.withdraw(amount);
     }
 
-    @Then("^my new account balance should be \\$(\\d+)$")
-    public void myNewAccountBalanceIs$(int balance) throws Throwable {
+    @Then("^I should receive \\$(\\d+) cash$")
+    public void iShouldReceiveReceivedCash(int cash) throws Throwable {
+        Assert.assertEquals(cash, amountWithdrew);
+    }
+
+    @Then("^I should see error an message$")
+    public void i_should_see_error_an_message() throws Throwable {
+        // No-Opt
+    }
+
+    @And("^the balance of my account should be \\$(\\d+)$")
+    public void theBalanceOfMyAccountShouldBeRemaining(int balance) throws Throwable {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
 
-    @Then("^Insufficient balance warning is displayed$")
-    public void iShouldGetInsufficientBalanceWarning() throws Throwable {
-        // No-Opt. Warning logged
-    }
-
-    @And("^I should not be able to withdraw$")
-    public void iShouldNotBeAbleToWithdraw() throws Throwable {
-        Assert.assertEquals(initialBalance, testAccount.getBalance());
-    }
 }
