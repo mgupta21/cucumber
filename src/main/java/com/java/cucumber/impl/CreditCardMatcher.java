@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by mgupta on 9/1/16.
  */
-class CreditCardMatcher {
+public class CreditCardMatcher {
 
     private static volatile Map<Long, Integer> creditCardDataBase = new HashMap<>();
 
@@ -30,6 +30,10 @@ class CreditCardMatcher {
             return creditCardDataBase.get(cardNumber) == pinNumber;
         }
         return false;
+    }
+
+    public static void clear() {
+        creditCardDataBase.clear();
     }
 
     private static boolean hasCreditCard(long cardNumber) {
