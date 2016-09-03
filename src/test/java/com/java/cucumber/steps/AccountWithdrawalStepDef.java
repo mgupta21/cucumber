@@ -13,7 +13,7 @@ import com.java.cucumber.impl.Account;
 /**
  * Created by mgupta on 9/2/16.
  */
-public class AccountStepDef {
+public class AccountWithdrawalStepDef {
 
     private static Account testAccount;
     private int            amountWithdrew;
@@ -33,7 +33,7 @@ public class AccountStepDef {
         Assert.assertEquals(cash, amountWithdrew);
     }
 
-    @Then("^I should see error an message$")
+    @Then("^I should see an error message$")
     public void i_should_see_error_an_message() throws Throwable {
         // No-Opt
     }

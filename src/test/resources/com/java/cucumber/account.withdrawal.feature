@@ -26,6 +26,6 @@ Feature: Account feature
 
     Examples: Unsuccessful withdrawal
       | Balance | withdrawal | Remaining | Outcome              |
-      | $100    | $200       | $100      | see error an message |
-      | $0      | $50        | $0        | see error an message |
+      | $100    | $200       | $100      | see an error message |
+      | $0      | $50        | $0        | see an error message |
 

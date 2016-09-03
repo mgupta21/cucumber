@@ -20,7 +20,7 @@ import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
 /**
  * Created by mgupta on 9/2/16.
  */
-public class CreditCardWithdrawStepDef {
+public class CreditCardWithdrawalStepDef {
 
     private CreditCard     cardA;
     private CreditCard     cardB;
