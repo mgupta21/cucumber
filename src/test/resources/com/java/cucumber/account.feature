@@ -5,3 +5,9 @@ Feature: Account feature
     Given I have balance of $100 in my account
     When I request $20
     Then my new account balance should be $80
+
+  Scenario: Unsuccessful withdrawal from an account
+    Given I have balance of $100 in my account
+    When I request $101
+    Then Insufficient balance warning is displayed
+    And I should not be able to withdraw

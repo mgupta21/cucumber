@@ -32,16 +32,15 @@ public class Account {
     }
 
     public void withdraw(int amount) {
-        balance -= amount;
+        if (hasSufficientBalance(amount)) {
+            balance -= amount;
+            return;
+        }
+        logger.warn("Transaction aborted. Insufficient balance. Current balance '" + balance + "' requested amount '" + amount + "'");
     }
 
-    public void withdraw(int amount, long cardNumber, int pinNumber) {
-        if (CreditCardMatcher.isPinValid(cardNumber, pinNumber)) {
-            logger.info("Successfully withdrew amount : " + amount);
-            withdraw(amount);
-        } else {
-            logger.error("Invalid PIN. Incorrect pin number entered for credit card '" + cardNumber + "'");
-        }
+    private boolean hasSufficientBalance(int amount) {
+        return balance >= amount;
     }
 
     private long generateAccountNumber() {
