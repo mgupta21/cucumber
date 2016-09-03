@@ -16,25 +16,39 @@ public class CreditCard {
 
     private String              cardHolderName;
     private long                cardNumber;
-    private String              expirationDate;
+    private LocalDate           expirationDate;
     private Account             account;
 
-    private static final Logger logger = Logger.getLogger(CreditCard.class);
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final Logger logger       = Logger.getLogger(CreditCard.class);
 
     public CreditCard(Account account, long cardNumber, int cardPinNumber) {
+        this(account, cardNumber, cardPinNumber, generateExpirationDate());
+    }
+
+    public CreditCard(Account account, long cardNumber, int cardPinNumber, String expirationDate) {
+        this(account, cardNumber, cardPinNumber, parseDate(expirationDate));
+    }
+
+    public CreditCard(Account account, long cardNumber, int cardPinNumber, LocalDate expirationDate) {
         this.account = account;
         this.cardHolderName = account.getAccountHolderName();
         this.cardNumber = cardNumber;
-        this.expirationDate = generateExpirationDate();
-        addCreditCardToDataBase(cardNumber, cardPinNumber);
-    }
-
-    public CreditCard(Account account, String cardHolderName, long cardNumber, int cardPinNumber, String expirationDate) {
-        this.account = account;
-        this.cardHolderName = cardHolderName;
-        this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         addCreditCardToDataBase(cardNumber, cardPinNumber);
+        newCardInfo();
+    }
+
+    public long getCardNumber() {
+        return cardNumber;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
     }
 
     public boolean resetPin(int oldPinNumber, int newPinNumber) {
@@ -45,46 +59,8 @@ public class CreditCard {
         return CreditCardMatcher.isPinValid(this.cardNumber, pinNumber);
     }
 
-    private void addCreditCardToDataBase(long cardNumber, int pinNumber) {
-        CreditCardMatcher.addCreditCard(cardNumber, pinNumber);
-    }
-
-    public long getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(long cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public String getCardHolderName() {
-        return cardHolderName;
-    }
-
-    private long generateCardNumber() {
-        return System.currentTimeMillis();
-    }
-
-    public String getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(String expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
     public void submit() throws RuntimeException {
         validateCard();
-    }
-
-    public void validateCard() {
-        validateExpiration(getExpirationDate());
-        validateCardNumber(getCardNumber());
-        validateCardName(getCardHolderName());
     }
 
     public void withdraw(int amount, int pinNumber) {
@@ -92,9 +68,9 @@ public class CreditCard {
         getAccount().withdraw(amount, this.cardNumber, pinNumber);
     }
 
-    private void validateCardName(String holderName) {
-        if (holderName.isEmpty())
-            throw new RuntimeException();
+    private void validateCard() {
+        validateExpiration(getExpirationDate());
+        validateCardNumber(getCardNumber());
     }
 
     private void validateCardNumber(long cardNumber) {
@@ -103,19 +79,29 @@ public class CreditCard {
         }
     }
 
-    private void validateExpiration(String dateStr) throws CardExpiredException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date = LocalDate.parse(dateStr, formatter);
-        Period duration = Period.between(LocalDate.now(), date);
-        if (duration.isNegative())
-            throw new CardExpiredException();
+    private void addCreditCardToDataBase(long cardNumber, int pinNumber) {
+        CreditCardMatcher.addCreditCard(cardNumber, pinNumber);
     }
 
-    private String generateExpirationDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate localDate = LocalDate.parse(LocalDate.now().plusYears(2).toString(), formatter);
-        String expirationDate = localDate.toString();
-        logger.info("Created new credit card with expiration date '" + expirationDate + "'");
-        return expirationDate;
+    private static LocalDate parseDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+        return LocalDate.parse(dateStr, formatter);
+    }
+
+    private void validateExpiration(LocalDate date) throws CardExpiredException {
+        Period duration = Period.between(LocalDate.now(), date);
+        if (duration.isNegative()) {
+            throw new CardExpiredException();
+        }
+    }
+
+    private static LocalDate generateExpirationDate() {
+        LocalDate date = LocalDate.now().plusYears(2);
+        logger.info("Generated new credit card expiration date '" + date + "'");
+        return date;
+    }
+
+    private void newCardInfo() {
+        logger.info("Created new credit card '" + cardNumber + "' for account '" + getAccount().getAccountNumber() + "'");
     }
 }

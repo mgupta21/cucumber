@@ -8,10 +8,9 @@ import com.java.cucumber.impl.CreditCard;
  */
 public class CreditCardBuilder {
 
-    private String  cardHolderName = "first last";
-    private long    cardNumber     = 1111222233334444L;
-    private int     cardPinNumber  = 0000;
-    private String  expirationDate = "20201010";
+    private long    cardNumber    = 1111222233334444L;
+    private int     cardPinNumber = 0000;
+    private String  expirationDate;
 
     private Account account;
 
@@ -19,12 +18,10 @@ public class CreditCardBuilder {
         if (account == null) {
             account = new AccountBuilder().build();
         }
-        return new CreditCard(account, cardHolderName, cardNumber, cardPinNumber, expirationDate);
-    }
-
-    public CreditCardBuilder withCardHolderName(String name) {
-        this.cardHolderName = name;
-        return this;
+        if (expirationDate == null) {
+            return new CreditCard(account, cardNumber, cardPinNumber);
+        }
+        return new CreditCard(account, cardNumber, cardPinNumber, expirationDate);
     }
 
     public CreditCardBuilder withAccount(Account account) {

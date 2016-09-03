@@ -6,6 +6,6 @@ package com.java.cucumber;
 public class TestConstants {
 
     public static final int    TEST_PIN_NUMBER   = 1234;
-    public static final String TEST_EXPIRED_DATE = "20001010";
+    public static final String TEST_EXPIRED_DATE = "2000-10-10";
 
 }

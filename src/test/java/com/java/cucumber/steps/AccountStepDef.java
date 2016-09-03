@@ -14,21 +14,20 @@ import com.java.cucumber.impl.Account;
  */
 public class AccountStepDef {
 
-    private static Account TEST_ACCOUNT;
+    private static Account testAccount;
 
     @Given("^I have balance of \\$(\\d+) in my account$")
     public void i_have_$_in_my_account(int amount) throws Throwable {
-        TEST_ACCOUNT = new AccountBuilder().withAccountBalance(amount).build();
+        testAccount = new AccountBuilder().withAccountBalance(amount).build();
     }
 
     @When("^I request \\$(\\d+)$")
     public void i_request_$(int amount) throws Throwable {
-        TEST_ACCOUNT.withdraw(amount);
+        testAccount.withdraw(amount);
     }
 
-    @Then("^\\$(\\d+) should be dispensed$")
-    public void $_should_be_dispensed(int amount) throws Throwable {
-        Assert.assertEquals(80, TEST_ACCOUNT.getBalance());
+    @Then("^my new account balance should be \\$(\\d+)$")
+    public void myNewAccountBalanceIs$(int balance) throws Throwable {
+        Assert.assertEquals(balance, testAccount.getBalance());
     }
-
 }
