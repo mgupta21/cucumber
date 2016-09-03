@@ -11,10 +11,12 @@ Feature: Account creation feature
       | abc      | invalid          |
       | ab1      | invalid          |
 
-# TODO : Fix failing scenarios
-#    Examples: Letters and Numbers
-#    Passwords need both letters and numbers to be valid
-#      | Password | Valid or Invalid |
-#      | abc1     | valid            |
-#      | abcd     | invalid          |
-#      | abcd1    | valid            |
+    Examples: Letters and Numbers
+    Passwords need both letters and numbers to be valid
+      | Password | Valid or Invalid |
+      | abc1     | valid            |
+      | abcd     | invalid          |
+      | abcd1    | valid            |
+      | 1abcd    | valid            |
+      | ab1cd    | valid            |
+      | 1111     | invalid          |

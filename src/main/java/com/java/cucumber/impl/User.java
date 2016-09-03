@@ -31,7 +31,7 @@ public class User {
 
     private static class PasswordValidator {
 
-        private static Pattern p = Pattern.compile("(([A-Z].*[0-9])|([0-9].*[A-Z]))");
+        private static Pattern p = Pattern.compile("\\S*(\\S*([a-zA-Z]\\S*[0-9])|([0-9]\\S*[a-zA-Z]))\\S*");
 
         private static boolean validate(String password) {
             if (password.length() < 4) {
