@@ -1,4 +1,5 @@
 # Created by mgupta at 9/2/16
+@CreditCard.Withdraw
 Feature: Withdraw money from account via creditcard
 
   Scenario: Attempt to withdrawal using invalid card

@@ -13,9 +13,12 @@ public class CreditCardBuilder {
     private int     cardPinNumber  = 0000;
     private String  expirationDate = "20201010";
 
-    private Account account        = new AccountBuilder().build();
+    private Account account;
 
     public CreditCard build() {
+        if (account == null) {
+            account = new AccountBuilder().build();
+        }
         return new CreditCard(account, cardHolderName, cardNumber, cardPinNumber, expirationDate);
     }
 

@@ -19,6 +19,7 @@ public class CreditCardMatcher {
 	static void addCreditCard(long cardNumber, int pinNumber) {
 		if (!hasCreditCard(cardNumber)) {
 			creditCardDataBase.put(cardNumber, pinNumber);
+			logger.info("Added new credit card '" + cardNumber + "' to database.");
 			return;
 		}
 		logger.warn("Credit card add request abandoned, credit card '" + cardNumber + "' already exist in database.");

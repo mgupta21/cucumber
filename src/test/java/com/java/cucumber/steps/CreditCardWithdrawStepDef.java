@@ -1,5 +1,6 @@
 package com.java.cucumber.steps;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -11,6 +12,7 @@ import com.java.cucumber.builder.CreditCardBuilder;
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.CreditCard;
+import com.java.cucumber.impl.CreditCardMatcher;
 
 import static com.java.cucumber.TestConstants.TEST_EXPIRED_DATE;
 import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
@@ -21,7 +23,12 @@ import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
 public class CreditCardWithdrawStepDef {
 
 	private CreditCard card;
-	private static Account TEST_ACCOUNT = new AccountBuilder().build();
+	private static Account TEST_ACCOUNT;
+
+	@Before("@CreditCard.Withdraw")
+	public void init() {
+		CreditCardMatcher.clear();
+	}
 
 	@Given("^I have \\$(\\d+) in my account$")
 	public void i_have_$_in_my_account(int amount) throws Throwable {

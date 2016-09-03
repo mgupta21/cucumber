@@ -7,11 +7,9 @@ import cucumber.api.java.en.When;
 
 import org.junit.Assert;
 
-import com.java.cucumber.builder.AccountBuilder;
 import com.java.cucumber.builder.CreditCardBuilder;
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.exceptions.InvalidCardNumberException;
-import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.Checkout;
 import com.java.cucumber.impl.CreditCard;
 import com.java.cucumber.impl.CreditCardMatcher;
@@ -25,10 +23,9 @@ import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
  */
 public class CreditCardStepDef {
 
-    private static Account TEST_ACCOUNT = new AccountBuilder().build();
-    private Checkout       checkout     = new Checkout();
-    private CreditCard     card;
-    private boolean        isPinReset;
+    private Checkout   checkout = new Checkout();
+    private CreditCard card;
+    private boolean    isPinReset;
 
     private void testSetup() {
         Store.addItem("banana", 40);
@@ -54,7 +51,7 @@ public class CreditCardStepDef {
 
     @When("^I enter a card number that's only four (\\d+) digits long$")
     public void i_enter_a_card_number_that_s_only_digits_long(int number) throws Throwable {
-        card = new CreditCardBuilder().withCardNumber(number).withCardPinNumber(TEST_PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
+        card = new CreditCardBuilder().withCardNumber(number).withCardPinNumber(TEST_PIN_NUMBER).build();
     }
 
     @When("^all the other details are correct$")
@@ -115,7 +112,7 @@ public class CreditCardStepDef {
     }
 
     private CreditCard getExpiredCreditCard() {
-        return new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(TEST_EXPIRED_DATE).build();
+        return new CreditCardBuilder().withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(TEST_EXPIRED_DATE).build();
     }
 
     @Then("^the system should remember my PIN is now (\\d+)$")
