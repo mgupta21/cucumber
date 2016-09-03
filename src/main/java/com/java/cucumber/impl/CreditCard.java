@@ -14,7 +14,6 @@ import com.java.cucumber.exceptions.InvalidCardNumberException;
  */
 public class CreditCard {
 
-    private String              cardHolderName;
     private long                cardNumber;
     private LocalDate           expirationDate;
     private Account             account;
@@ -32,7 +31,6 @@ public class CreditCard {
 
     public CreditCard(Account account, long cardNumber, int cardPinNumber, LocalDate expirationDate) {
         this.account = account;
-        this.cardHolderName = account.getAccountHolderName();
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         addCreditCardToDataBase(cardNumber, cardPinNumber);
