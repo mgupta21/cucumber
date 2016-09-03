@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.log4j.Logger;
+
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.exceptions.InvalidCardNumberException;
 
@@ -12,16 +14,18 @@ import com.java.cucumber.exceptions.InvalidCardNumberException;
  */
 public class CreditCard {
 
-    private String  cardHolderName;
-    private long    cardNumber;
-    private String  expirationDate;
-    private Account account;
+    private String              cardHolderName;
+    private long                cardNumber;
+    private String              expirationDate;
+    private Account             account;
+
+    private static final Logger logger = Logger.getLogger(CreditCard.class);
 
     public CreditCard(Account account, long cardNumber, int cardPinNumber) {
         this.account = account;
         this.cardHolderName = account.getAccountHolderName();
         this.cardNumber = cardNumber;
-        this.expirationDate = generateDefaultExpirationDate();
+        this.expirationDate = generateExpirationDate();
         addCreditCardToDataBase(cardNumber, cardPinNumber);
     }
 
@@ -107,10 +111,11 @@ public class CreditCard {
             throw new CardExpiredException();
     }
 
-    private String generateDefaultExpirationDate() {
+    private String generateExpirationDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate localDate = LocalDate.parse(LocalDate.now().plusYears(2).toString(), formatter);
-        return localDate.toString();
-
+        String expirationDate = localDate.toString();
+        logger.info("Created new credit card with expiration date '" + expirationDate + "'");
+        return expirationDate;
     }
 }

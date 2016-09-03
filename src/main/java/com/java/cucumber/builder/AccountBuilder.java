@@ -7,21 +7,15 @@ import com.java.cucumber.impl.Account;
  */
 public class AccountBuilder {
 
-    private long   accountNumber     = 1L;
     private String accountHolderName = "first last";
     private int    balance           = 0;
 
     public Account build() {
-        return new Account(accountHolderName, accountNumber, balance);
+        return new Account(accountHolderName, balance);
     }
 
     public AccountBuilder withAccountHolderName(String name) {
         this.accountHolderName = name;
-        return this;
-    }
-
-    public AccountBuilder withAccountNumber(long accountNumber) {
-        this.accountNumber = accountNumber;
         return this;
     }
 

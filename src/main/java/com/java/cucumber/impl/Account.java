@@ -1,33 +1,26 @@
 package com.java.cucumber.impl;
 
+import org.apache.log4j.Logger;
+
 /**
  * Created by mgupta on 7/27/16.
  */
 public class Account {
 
-    private String accountHolderName;
-    private long   accountNumber;
-    private int    balance;
-    // private CreditCard creditCard;
+    private String              accountHolderName;
+    private long                accountNumber;
+    private int                 balance;
+
+    private static final Logger logger = Logger.getLogger(Account.class);
 
     public Account(String accountHolderName, int amount) {
         this.accountHolderName = accountHolderName;
         this.balance = amount;
-        this.accountNumber = System.currentTimeMillis();
-    }
-
-    public Account(String accountHolderName, long accountNumber, int amount) {
-        this.accountHolderName = accountHolderName;
-        this.balance = amount;
-        this.accountNumber = accountNumber;
+        this.accountNumber = generateAccountNumber();
     }
 
     public int getBalance() {
         return balance;
-    }
-
-    public void withdraw(int amount) {
-        balance -= amount;
     }
 
     public long getAccountNumber() {
@@ -38,48 +31,22 @@ public class Account {
         return accountHolderName;
     }
 
+    public void withdraw(int amount) {
+        balance -= amount;
+    }
+
     public void withdraw(int amount, long cardNumber, int pinNumber) {
         if (CreditCardMatcher.isPinValid(cardNumber, pinNumber)) {
-            System.out.println("Successfully withDrew amount : " + amount);
+            logger.info("Successfully withdrew amount : " + amount);
             withdraw(amount);
         } else {
-            System.out.println("Error : Invalid PIN");
+            logger.error("Invalid PIN. Incorrect pin number entered for credit card '" + cardNumber + "'");
         }
     }
 
-    /*
-     * public void withdrawByCreditCard(int amount, CreditCard creditCard) {
-     * if (!hasCreditCard()) {
-     * throw new NoCreditCardAssoiciatedWithAccount();
-     * }
-     * isLinkedCreditCard(creditCard);
-     * getCreditCard().withdraw(amount);
-     * }
-     */
-
-    /*
-     * private boolean isLinkedCreditCard(CreditCard creditCard) {
-     * return this.getCreditCard().getCardNumber() == creditCard.getCardNumber() && this.getCreditCard().getCardPinNumber() ==
-     * creditCard.getCardPinNumber()
-     * && this.getCreditCard().getExpirationDate() == creditCard.getExpirationDate();
-     * }
-     */
-
-    /*
-     * private boolean hasCreditCard() {
-     * return this.creditCard != null;
-     * }
-     */
-
-    /*
-     * public void addCreditCard(CreditCard creditCard) {
-     * this.creditCard = creditCard;
-     * }
-     */
-
-    /*
-     * public CreditCard getCreditCard() {
-     * return creditCard;
-     * }
-     */
+    private long generateAccountNumber() {
+        long accountNumber = System.currentTimeMillis();
+        logger.info("Created new account with number '" + accountNumber + "'");
+        return accountNumber;
+    }
 }

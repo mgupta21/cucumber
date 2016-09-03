@@ -10,7 +10,7 @@ public class CreditCardBuilder {
 
     private String  cardHolderName = "first last";
     private long    cardNumber     = 1111222233334444L;
-    private int     cardPinNumber  = 1234;
+    private int     cardPinNumber  = 0000;
     private String  expirationDate = "20201010";
 
     private Account account        = new AccountBuilder().build();
