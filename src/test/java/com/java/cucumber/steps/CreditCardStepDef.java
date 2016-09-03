@@ -17,16 +17,18 @@ import com.java.cucumber.impl.CreditCard;
 import com.java.cucumber.impl.CreditCardMatcher;
 import com.java.cucumber.impl.Store;
 
+import static com.java.cucumber.TestConstants.TEST_EXPIRED_DATE;
+import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
+
 /**
  * Created by mgupta on 7/25/16.
  */
 public class CreditCardStepDef {
 
-    private static final int    TEST_PIN_NUMBER = 1234;
-    private static final String EXPIRED_DATE    = "20001010";
-    private static Account      TEST_ACCOUNT    = new AccountBuilder().build();
-    private Checkout            checkout        = new Checkout();
-    private CreditCard          card;
+    private static Account TEST_ACCOUNT = new AccountBuilder().build();
+    private Checkout       checkout     = new Checkout();
+    private CreditCard     card;
+    private boolean        isPinReset;
 
     private void testSetup() {
         Store.addItem("banana", 40);
@@ -50,21 +52,6 @@ public class CreditCardStepDef {
         card = new CreditCardBuilder().withCardPinNumber(TEST_PIN_NUMBER).build();
     }
 
-    @Given("^I have \\$(\\d+) in my account$")
-    public void i_have_$_in_my_account(int amount) throws Throwable {
-        TEST_ACCOUNT = new AccountBuilder().withAccountBalance(amount).build();
-    }
-
-    @Given("^my card is valid$")
-    public void my_card_is_valid() throws Throwable {
-        card = new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).build();
-    }
-
-    @Given("^my card is invalid$")
-    public void my_card_is_invalid() throws Throwable {
-        card = getExpiredCreditCard();
-    }
-
     @When("^I enter a card number that's only four (\\d+) digits long$")
     public void i_enter_a_card_number_that_s_only_digits_long(int number) throws Throwable {
         card = new CreditCardBuilder().withCardNumber(number).withCardPinNumber(TEST_PIN_NUMBER).withAccount(TEST_ACCOUNT).build();
@@ -85,22 +72,6 @@ public class CreditCardStepDef {
         card = getExpiredCreditCard();
     }
 
-    @When("^I request \\$(\\d+) via invalid card$")
-    public void i_request_$_via_card(int amount) throws Throwable {
-        boolean flag = false;
-        try {
-            card.withdraw(amount, TEST_PIN_NUMBER);
-        } catch (CardExpiredException e) {
-            flag = true;
-        }
-        Assert.assertTrue(flag);
-    }
-
-    @When("^I request \\$(\\d+) via valid card$")
-    public void i_request_$_via_valid_card(int amount) throws Throwable {
-        card.withdraw(amount, TEST_PIN_NUMBER);
-    }
-
     @When("^I choose \"([^\"]*)\" from the menu$")
     public void iChooseFromTheMenu(String arg0) throws Throwable {
         // No-Opt
@@ -113,7 +84,12 @@ public class CreditCardStepDef {
 
     @When("^I change the PIN to (\\d+)$")
     public void iChangeThePINTo(int pinNumber) throws Throwable {
-        card.resetPin(TEST_PIN_NUMBER, pinNumber);
+        isPinReset = card.resetPin(TEST_PIN_NUMBER, pinNumber);
+    }
+
+    @When("^I try to change the PIN to the original PIN number$")
+    public void iTryToChangeThePINToTheOriginalPINNumber() throws Throwable {
+        isPinReset = card.resetPin(TEST_PIN_NUMBER, TEST_PIN_NUMBER);
     }
 
     @Then("^invalid card number error should be displayed$")
@@ -138,24 +114,25 @@ public class CreditCardStepDef {
         Assert.assertTrue(flag);
     }
 
-    @Then("^I should get invalid card exception$")
-    public void i_should_get_invalid_card_exception() throws Throwable {
-        // Do Nothing
-    }
-
     private CreditCard getExpiredCreditCard() {
-        return new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(EXPIRED_DATE).build();
-    }
-
-    @Then("^I should get \\$(\\d+) withdrawn$")
-    public void i_should_get_$_withdrawn(int balance) throws Throwable {
-        Assert.assertEquals(balance, card.getAccount().getBalance());
+        return new CreditCardBuilder().withAccount(TEST_ACCOUNT).withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(TEST_EXPIRED_DATE).build();
     }
 
     @Then("^the system should remember my PIN is now (\\d+)$")
     public void theSystemShouldRememberMyPINIsNow(int pinNumber) throws Throwable {
         Assert.assertFalse(card.isPinValid(TEST_PIN_NUMBER));
+        Assert.assertTrue(isPinReset);
         Assert.assertTrue(card.isPinValid(pinNumber));
+    }
+
+    @Then("^I should see a warning message$")
+    public void iShouldSeeAWarningMessage() throws Throwable {
+        // No-opt
+    }
+
+    @Then("^the system should not have changed my PIN$")
+    public void theSystemShouldNotHaveChangedMyPIN() throws Throwable {
+        Assert.assertFalse(isPinReset);
     }
 
 }

@@ -37,8 +37,8 @@ public class CreditCard {
         addCreditCardToDataBase(cardNumber, cardPinNumber);
     }
 
-    public void resetPin(int oldPinNumber, int newPinNumber) {
-        CreditCardMatcher.resetCreditCardNumber(this.cardNumber, oldPinNumber, newPinNumber);
+    public boolean resetPin(int oldPinNumber, int newPinNumber) {
+        return CreditCardMatcher.resetCreditCardNumber(this.cardNumber, oldPinNumber, newPinNumber);
     }
 
     public boolean isPinValid(int pinNumber) {

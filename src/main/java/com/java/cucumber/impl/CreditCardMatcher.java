@@ -10,39 +10,48 @@ import org.apache.log4j.Logger;
  */
 public class CreditCardMatcher {
 
-    private static final Logger                logger             = Logger.getLogger(CreditCardMatcher.class);
-    private static volatile Map<Long, Integer> creditCardDataBase = new HashMap<>();
+	private static final Logger logger = Logger.getLogger(CreditCardMatcher.class);
+	private static volatile Map<Long, Integer> creditCardDataBase = new HashMap<>();
 
-    private CreditCardMatcher() {
-    }
+	private CreditCardMatcher() {
+	}
 
-    static void addCreditCard(long cardNumber, int pinNumber) {
-        if (!hasCreditCard(cardNumber)) {
-            creditCardDataBase.put(cardNumber, pinNumber);
-            return;
-        }
-        logger.warn("Credit card add request abandoned, credit card '" + cardNumber + "' already exist in database.");
-    }
+	static void addCreditCard(long cardNumber, int pinNumber) {
+		if (!hasCreditCard(cardNumber)) {
+			creditCardDataBase.put(cardNumber, pinNumber);
+			return;
+		}
+		logger.warn("Credit card add request abandoned, credit card '" + cardNumber + "' already exist in database.");
+	}
 
-    static void resetCreditCardNumber(long cardNumber, int oldPinNumber, int pinNumber) {
-        if (isPinValid(cardNumber, oldPinNumber)) {
-            creditCardDataBase.put(cardNumber, pinNumber);
-        }
-    }
+	static boolean resetCreditCardNumber(long cardNumber, int oldPinNumber, int newPinNumber) {
+		if (isPinValid(cardNumber, oldPinNumber)) {
+			if (isPinDifferent(oldPinNumber, newPinNumber)) {
+				creditCardDataBase.put(cardNumber, newPinNumber);
+				return true;
+			}
+			logger.warn("Couldn't reset PIN. New PIN number must be different from old.");
+		}
+		return false;
+	}
 
-    static boolean isPinValid(long cardNumber, int pinNumber) {
-        if (hasCreditCard(cardNumber)) {
-            return creditCardDataBase.get(cardNumber) == pinNumber;
-        }
-        return false;
-    }
+	private static boolean isPinDifferent(int oldPinNumber, int newPinNumber) {
+		return oldPinNumber != newPinNumber;
+	}
 
-    public static void clear() {
-        creditCardDataBase.clear();
-    }
+	static boolean isPinValid(long cardNumber, int pinNumber) {
+		if (hasCreditCard(cardNumber)) {
+			return creditCardDataBase.get(cardNumber) == pinNumber;
+		}
+		return false;
+	}
 
-    private static boolean hasCreditCard(long cardNumber) {
-        return creditCardDataBase.containsKey(cardNumber);
-    }
+	public static void clear() {
+		creditCardDataBase.clear();
+	}
+
+	private static boolean hasCreditCard(long cardNumber) {
+		return creditCardDataBase.containsKey(cardNumber);
+	}
 
 }

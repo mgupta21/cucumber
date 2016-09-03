@@ -22,15 +22,10 @@ Feature: Feedback on entering credit card details
     And I change the PIN to 9876
     Then the system should remember my PIN is now 9876
 
-  Scenario: Attempt to withdrawal using invalid card
-    Given I have $100 in my account
-    But my card is invalid
-    When I request $50 via invalid card
-    Then I should get invalid card exception
-
-  Scenario: Attempt to withdrawal using valid card
-    Given I have $100 in my account
-    And my card is valid
-    When I request $50 via valid card
-    Then I should get $50 withdrawn
-
+  Scenario: Change the PIN unsuccessfully
+    Given I have been issued a new card
+    And I insert the card, entering the correct PIN
+    When I choose "Change PIN" from the menu
+    And I try to change the PIN to the original PIN number
+    Then I should see a warning message
+    Then the system should not have changed my PIN
