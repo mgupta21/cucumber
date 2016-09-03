@@ -13,3 +13,11 @@ Feature: Withdraw money from account via creditcard
     And my card is valid
     When I request $50 via valid card
     Then I should get $50 withdrawn
+
+  Scenario: Attempt to withdrawal using multiple cards
+    Given I have $100 in my account
+    And I have a card A "1212121212121212" associated with my account
+    And I have a card B "9191919191919191" associated with my account
+    When I request $20 via card A
+    And I request $70 via card B
+    Then I should have $10 in my account

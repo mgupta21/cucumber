@@ -1,6 +1,8 @@
 package com.java.cucumber.steps;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -22,7 +24,8 @@ import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
  */
 public class CreditCardWithdrawStepDef {
 
-    private CreditCard     card;
+    private CreditCard     cardA;
+    private CreditCard     cardB;
     private static Account testAccount;
 
     @Before("@CreditCard.Withdraw")
@@ -37,32 +40,57 @@ public class CreditCardWithdrawStepDef {
 
     @Given("^my card is valid$")
     public void my_card_is_valid() throws Throwable {
-        card = new CreditCardBuilder().withAccount(testAccount).withCardPinNumber(TEST_PIN_NUMBER).build();
+        cardA = new CreditCardBuilder().withAccount(testAccount).withCardPinNumber(TEST_PIN_NUMBER).build();
     }
 
     @Given("^my card is invalid$")
     public void my_card_is_invalid() throws Throwable {
-        card = getExpiredCreditCard();
+        cardA = getExpiredCreditCard();
     }
 
     private CreditCard getExpiredCreditCard() {
         return new CreditCardBuilder().withAccount(testAccount).withCardPinNumber(TEST_PIN_NUMBER).withExpirationDate(TEST_EXPIRED_DATE).build();
     }
 
+    @Given("^I have a card A \"([^\"]*)\" associated with my account$")
+    public void iHaveACardAAssociatedWithMyAccount(String cardNumber) throws Throwable {
+        cardA = new CreditCardBuilder().withAccount(testAccount).withCardNumber(Long.parseLong(cardNumber)).withCardPinNumber(TEST_PIN_NUMBER).build();
+    }
+
+    @Given("^I have a card B \"([^\"]*)\" associated with my account$")
+    public void iHaveBCardAAssociatedWithMyAccount(String cardNumber) throws Throwable {
+        cardB = new CreditCardBuilder().withAccount(testAccount).withCardNumber(Long.parseLong(cardNumber)).withCardPinNumber(TEST_PIN_NUMBER).build();
+    }
+
     @When("^I request \\$(\\d+) via invalid card$")
     public void i_request_$_via_card(int amount) throws Throwable {
         boolean flag = false;
         try {
-            card.withdraw(amount, TEST_PIN_NUMBER);
+            withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
         } catch (CardExpiredException e) {
             flag = true;
         }
         Assert.assertTrue(flag);
     }
 
+    private void withdrawFromCard(CreditCard card, int amount, int cardPinNumber) {
+        card.withdraw(amount, cardPinNumber);
+    }
+
     @When("^I request \\$(\\d+) via valid card$")
     public void i_request_$_via_valid_card(int amount) throws Throwable {
-        card.withdraw(amount, TEST_PIN_NUMBER);
+        withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
+    }
+
+    @When("^I request \\$(\\d+) via card A$")
+    public void iRequest$ViaCardA(int amount) throws Throwable {
+        withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
+
+    }
+
+    @When("^I request \\$(\\d+) via card B$")
+    public void iRequest$ViaCardB(int amount) throws Throwable {
+        withdrawFromCard(cardB, amount, TEST_PIN_NUMBER);
     }
 
     @Then("^I should get invalid card exception$")
@@ -72,7 +100,18 @@ public class CreditCardWithdrawStepDef {
 
     @Then("^I should get \\$(\\d+) withdrawn$")
     public void i_should_get_$_withdrawn(int balance) throws Throwable {
-        Assert.assertEquals(balance, card.getAccount().getBalance());
+        Assert.assertEquals(balance, cardA.getAccount().getBalance());
+    }
+
+    @Then("^I should have \\$(\\d+) in my account$")
+    public void iShouldHave$InMyAccount(int balance) throws Throwable {
+        Assert.assertEquals(balance, testAccount.getBalance());
+    }
+
+    @And("^I have a card A (\\d+)L associated with my account$")
+    public void iHaveACardALAssociatedWithMyAccount(int arg0) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
     }
 
 }

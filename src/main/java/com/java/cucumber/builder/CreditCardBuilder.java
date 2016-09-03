@@ -29,7 +29,7 @@ public class CreditCardBuilder {
         return this;
     }
 
-    public CreditCardBuilder withCardNumber(int cardNumber) {
+    public CreditCardBuilder withCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
         return this;
     }
