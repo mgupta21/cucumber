@@ -8,7 +8,7 @@ Feature: Feedback on entering credit card details
     And I submit the form
     Then invalid card number error should be displayed
 
-  Scenario: Expiry Date must not be in the past
+  Scenario: Credit card expired
     Given I have choosen some items to buy
     When I enter a card expiry date that's in the past
     And all the other details are correct

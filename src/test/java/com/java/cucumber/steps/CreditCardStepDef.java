@@ -58,7 +58,7 @@ public class CreditCardStepDef {
 
     @When("^I submit the form$")
     public void i_submit_the_form() throws Throwable {
-        // Do Nothing
+        // No-Opt
     }
 
     @When("^I enter a card expiry date that's in the past$")
