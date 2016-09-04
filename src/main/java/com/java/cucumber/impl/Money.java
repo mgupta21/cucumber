@@ -7,32 +7,51 @@ import org.apache.log4j.Logger;
  */
 public class Money {
 
-	Logger logger = Logger.getLogger(Money.class);
+    Logger         logger = Logger.getLogger(Money.class);
 
-	private int amount;
+    private double amount;
 
-	public int getAmount() {
-		return amount;
-	}
+    public double getAmount() {
+        return amount;
+    }
 
-	public Money(int amount) {
-		this.amount = amount;
-	}
+    public Money(int dollars, int cents) {
+        this.amount = dollars + (cents / 100);
+    }
 
-	public void add(Money money) {
-		this.amount += money.amount;
-	}
+    public void add(Money money) {
+        this.amount += money.amount;
+    }
 
-	public int deduct(Money money) {
-		if (isDeductable(money)) {
-			this.amount -= money.amount;
-			return money.amount;
-		}
-		logger.warn("Transaction aborted. Couldn't deduct '" + money.amount + "' from '" + amount + "'");
-		return 0;
-	}
+    public double deduct(Money money) {
+        if (isDeductable(money)) {
+            this.amount -= money.amount;
+            return money.amount;
+        }
+        logger.warn("Transaction aborted. Couldn't deduct '" + money.amount + "' from '" + amount + "'");
+        return 0;
+    }
 
-	public boolean isDeductable(Money money) {
-		return this.amount >= money.amount;
-	}
+    public boolean isDeductable(Money money) {
+        return this.amount >= money.amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Money money = (Money) o;
+
+        return Double.compare(money.amount, amount) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        long temp = Double.doubleToLongBits(amount);
+        return (int) (temp ^ (temp >>> 32));
+    }
 }

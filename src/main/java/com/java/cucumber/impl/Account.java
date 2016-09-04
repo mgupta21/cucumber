@@ -13,9 +13,9 @@ public class Account {
 
     private static final Logger logger = Logger.getLogger(Account.class);
 
-    public Account(String accountHolderName, int openingBalance) {
+    public Account(String accountHolderName, Money openingAmount) {
         this.accountHolderName = accountHolderName;
-        this.balance = new Money(openingBalance);
+        this.balance = openingAmount;
         this.accountNumber = generateAccountNumber();
     }
 
@@ -31,7 +31,7 @@ public class Account {
         return accountHolderName;
     }
 
-    public int withdraw(Money amount) {
+    public double withdraw(Money amount) {
         return balance.deduct(amount);
     }
 

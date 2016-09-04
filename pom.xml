@@ -9,6 +9,7 @@
 
     <properties>
         <cucumber.version>1.1.8</cucumber.version>
+        <cucumber-testng.version>1.2.4</cucumber-testng.version>
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>
     </properties>
@@ -30,6 +31,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber-testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

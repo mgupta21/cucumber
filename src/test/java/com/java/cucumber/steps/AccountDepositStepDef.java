@@ -1,11 +1,12 @@
 package com.java.cucumber.steps;
 
-import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 import com.java.cucumber.builder.AccountBuilder;
+import com.java.cucumber.convertor.MoneyConvertor;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.Money;
 
@@ -14,23 +15,21 @@ import com.java.cucumber.impl.Money;
  */
 public class AccountDepositStepDef {
 
-    private Account testAccount;
+	private Account testAccount;
 
-    @Given("^I have deposited \\$(\\d+) in my account$")
-    public void iHaveDeposited$InMyAccount(Money amount) throws Throwable {
-        testAccount = new AccountBuilder().build();
-        testAccount.deposit(amount);
-    }
+	@Given("^I have deposited \"([^\"]*)\" in my account$")
+	public void iHaveDeposited$InMyAccount(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+		testAccount = new AccountBuilder().build();
+		testAccount.deposit(amount);
+	}
 
-    @When("^I request \\$(\\d+)$")
-    public void iRequest$(int arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
+	@When("^I request \"([^\"]*)\"$")
+	public void iRequest$(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+		// TODO
+	}
 
-    @Then("^\\$(\\d+) should be dispensed$")
-    public void $ShouldBeDispensed(int arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
+	@Then("\"([^\"]*)\" should be dispensed$")
+	public void $ShouldBeDispensed(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+		// TODO
+	}
 }
