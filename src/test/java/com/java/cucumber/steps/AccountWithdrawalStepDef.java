@@ -9,9 +9,9 @@ import cucumber.api.java.en.When;
 import org.junit.Assert;
 
 import com.java.cucumber.builder.AccountBuilder;
-import com.java.cucumber.convertor.MoneyConvertor;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.Money;
+import com.java.cucumber.utils.MoneyConverter;
 
 import static com.java.cucumber.TestConstants.DELTA;
 
@@ -24,18 +24,17 @@ public class AccountWithdrawalStepDef {
     private double         amountWithdrew;
 
     @Given("^I have \"([^\"]*)\" in my account$")
-    public void iHaveBalanceInMyAccount(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void iHaveBalanceInMyAccount(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         testAccount = new AccountBuilder().withAccountBalance(amount).build();
     }
 
     @When("^I choose to withdraw the fixed amount of \"([^\"]*)\"$")
-    public void iChooseToWithdrawTheFixedAmountOfWithdrawal(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void iChooseToWithdrawTheFixedAmountOfWithdrawal(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         amountWithdrew = testAccount.withdraw(amount);
     }
 
     @Then("^I should receive \"([^\"]*)\" cash$")
-    public void iShouldReceiveReceivedCash(@Transform(MoneyConvertor.class) Money cash) throws Throwable {
-
+    public void iShouldReceiveReceivedCash(@Transform(MoneyConverter.class) Money cash) throws Throwable {
         Assert.assertEquals(cash.getAmount(), amountWithdrew, DELTA);
     }
 
@@ -45,7 +44,7 @@ public class AccountWithdrawalStepDef {
     }
 
     @And("^the balance of my account should be \"([^\"]*)\"$")
-    public void theBalanceOfMyAccountShouldBeRemaining(@Transform(MoneyConvertor.class) Money balance) throws Throwable {
+    public void theBalanceOfMyAccountShouldBeRemaining(@Transform(MoneyConverter.class) Money balance) throws Throwable {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
 }

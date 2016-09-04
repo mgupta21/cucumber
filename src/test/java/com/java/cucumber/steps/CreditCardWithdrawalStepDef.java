@@ -10,12 +10,12 @@ import org.junit.Assert;
 
 import com.java.cucumber.builder.AccountBuilder;
 import com.java.cucumber.builder.CreditCardBuilder;
-import com.java.cucumber.convertor.MoneyConvertor;
 import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.CreditCard;
 import com.java.cucumber.impl.CreditCardMatcher;
 import com.java.cucumber.impl.Money;
+import com.java.cucumber.utils.MoneyConverter;
 
 import static com.java.cucumber.TestConstants.TEST_EXPIRED_DATE;
 import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
@@ -35,7 +35,7 @@ public class CreditCardWithdrawalStepDef {
     }
 
     @Given("^I have \"([^\"]*)\" in my bank account$")
-    public void i_have_$_in_my_account(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void i_have_$_in_my_account(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         testAccount = new AccountBuilder().withAccountBalance(amount).build();
     }
 
@@ -64,7 +64,7 @@ public class CreditCardWithdrawalStepDef {
     }
 
     @When("^I request \"([^\"]*)\" via invalid card$")
-    public void i_request_$_via_card(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void i_request_$_via_card(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         boolean flag = false;
         try {
             withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
@@ -79,18 +79,18 @@ public class CreditCardWithdrawalStepDef {
     }
 
     @When("^I request \"([^\"]*)\" via valid card$")
-    public void i_request_$_via_valid_card(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void i_request_$_via_valid_card(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
     }
 
     @When("^I request \"([^\"]*)\" via card A$")
-    public void iRequest$ViaCardA(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void iRequest$ViaCardA(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
 
     }
 
     @When("^I request \"([^\"]*)\" via card B$")
-    public void iRequest$ViaCardB(@Transform(MoneyConvertor.class) Money amount) throws Throwable {
+    public void iRequest$ViaCardB(@Transform(MoneyConverter.class) Money amount) throws Throwable {
         withdrawFromCard(cardB, amount, TEST_PIN_NUMBER);
     }
 
@@ -100,12 +100,12 @@ public class CreditCardWithdrawalStepDef {
     }
 
     @Then("^I should get \"([^\"]*)\" withdrawn$")
-    public void i_should_get_$_withdrawn(@Transform(MoneyConvertor.class) Money balance) throws Throwable {
+    public void i_should_get_$_withdrawn(@Transform(MoneyConverter.class) Money balance) throws Throwable {
         Assert.assertEquals(balance, cardA.getAccount().getBalance());
     }
 
     @Then("^I should have \"([^\"]*)\" in my account$")
-    public void iShouldHave$InMyAccount(@Transform(MoneyConvertor.class) Money balance) throws Throwable {
+    public void iShouldHave$InMyAccount(@Transform(MoneyConverter.class) Money balance) throws Throwable {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
 

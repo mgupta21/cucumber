@@ -1,4 +1,4 @@
-package com.java.cucumber.convertor;
+package com.java.cucumber.utils;
 
 import cucumber.api.Transformer;
 
@@ -7,7 +7,7 @@ import com.java.cucumber.impl.Money;
 /**
  * Created by mgupta on 9/4/16.
  */
-public class MoneyConvertor extends Transformer<Money> {
+public class MoneyConverter extends Transformer<Money> {
 
     @Override
     public Money transform(String s) {
