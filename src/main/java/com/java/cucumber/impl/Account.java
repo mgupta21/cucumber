@@ -9,17 +9,17 @@ public class Account {
 
     private String              accountHolderName;
     private long                accountNumber;
-    private int                 balance;
+    private Money               balance;
 
     private static final Logger logger = Logger.getLogger(Account.class);
 
     public Account(String accountHolderName, int openingBalance) {
         this.accountHolderName = accountHolderName;
-        this.balance = openingBalance;
+        this.balance = new Money(openingBalance);
         this.accountNumber = generateAccountNumber();
     }
 
-    public int getBalance() {
+    public Money getBalance() {
         return balance;
     }
 
@@ -31,23 +31,17 @@ public class Account {
         return accountHolderName;
     }
 
-    public int withdraw(int amount) {
-        if (hasSufficientBalance(amount)) {
-            balance -= amount;
-            logger.info("Successfully withdrew amount : " + amount);
-            return amount;
-        }
-        logger.warn("Transaction aborted. Insufficient balance. Current balance '" + balance + "' requested amount '" + amount + "'");
-        return 0;
-    }
-
-    private boolean hasSufficientBalance(int amount) {
-        return balance >= amount;
+    public int withdraw(Money amount) {
+        return balance.deduct(amount);
     }
 
     private long generateAccountNumber() {
         long accountNumber = System.currentTimeMillis();
         logger.info("Created new account with number '" + accountNumber + "'");
         return accountNumber;
+    }
+
+    public void deposit(Money money) {
+        this.balance.add(money);
     }
 }

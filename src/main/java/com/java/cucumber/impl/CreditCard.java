@@ -61,7 +61,7 @@ public class CreditCard {
         validateCard();
     }
 
-    public void withdraw(int amount, int pinNumber) {
+    public void withdraw(Money amount, int pinNumber) {
         validateExpiration(getExpirationDate());
         if (CreditCardMatcher.isPinValid(cardNumber, pinNumber)) {
             getAccount().withdraw(amount);

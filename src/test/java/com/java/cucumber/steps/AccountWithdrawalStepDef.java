@@ -9,6 +9,7 @@ import org.junit.Assert;
 
 import com.java.cucumber.builder.AccountBuilder;
 import com.java.cucumber.impl.Account;
+import com.java.cucumber.impl.Money;
 
 /**
  * Created by mgupta on 9/2/16.
@@ -24,7 +25,7 @@ public class AccountWithdrawalStepDef {
     }
 
     @When("^I choose to withdraw the fixed amount of \\$(\\d+)$")
-    public void iChooseToWithdrawTheFixedAmountOfWithdrawal(int amount) throws Throwable {
+    public void iChooseToWithdrawTheFixedAmountOfWithdrawal(Money amount) throws Throwable {
         amountWithdrew = testAccount.withdraw(amount);
     }
 
@@ -42,5 +43,4 @@ public class AccountWithdrawalStepDef {
     public void theBalanceOfMyAccountShouldBeRemaining(int balance) throws Throwable {
         Assert.assertEquals(balance, testAccount.getBalance());
     }
-
 }

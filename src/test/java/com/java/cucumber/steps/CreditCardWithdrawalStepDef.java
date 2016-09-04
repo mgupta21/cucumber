@@ -13,6 +13,7 @@ import com.java.cucumber.exceptions.CardExpiredException;
 import com.java.cucumber.impl.Account;
 import com.java.cucumber.impl.CreditCard;
 import com.java.cucumber.impl.CreditCardMatcher;
+import com.java.cucumber.impl.Money;
 
 import static com.java.cucumber.TestConstants.TEST_EXPIRED_DATE;
 import static com.java.cucumber.TestConstants.TEST_PIN_NUMBER;
@@ -61,7 +62,7 @@ public class CreditCardWithdrawalStepDef {
     }
 
     @When("^I request \\$(\\d+) via invalid card$")
-    public void i_request_$_via_card(int amount) throws Throwable {
+    public void i_request_$_via_card(Money amount) throws Throwable {
         boolean flag = false;
         try {
             withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
@@ -71,23 +72,23 @@ public class CreditCardWithdrawalStepDef {
         Assert.assertTrue(flag);
     }
 
-    private void withdrawFromCard(CreditCard card, int amount, int cardPinNumber) {
+    private void withdrawFromCard(CreditCard card, Money amount, int cardPinNumber) {
         card.withdraw(amount, cardPinNumber);
     }
 
     @When("^I request \\$(\\d+) via valid card$")
-    public void i_request_$_via_valid_card(int amount) throws Throwable {
+    public void i_request_$_via_valid_card(Money amount) throws Throwable {
         withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
     }
 
     @When("^I request \\$(\\d+) via card A$")
-    public void iRequest$ViaCardA(int amount) throws Throwable {
+    public void iRequest$ViaCardA(Money amount) throws Throwable {
         withdrawFromCard(cardA, amount, TEST_PIN_NUMBER);
 
     }
 
     @When("^I request \\$(\\d+) via card B$")
-    public void iRequest$ViaCardB(int amount) throws Throwable {
+    public void iRequest$ViaCardB(Money amount) throws Throwable {
         withdrawFromCard(cardB, amount, TEST_PIN_NUMBER);
     }
 
