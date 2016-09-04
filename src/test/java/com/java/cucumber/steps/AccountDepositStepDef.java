@@ -21,8 +21,8 @@ public class AccountDepositStepDef {
 
     private final KnowsMyDomain helper;
 
-    public AccountDepositStepDef() {
-        helper = new KnowsMyDomain();
+    public AccountDepositStepDef(KnowsMyDomain helper) {
+        this.helper = helper;
     }
 
     @Given("^I have deposited \"([^\"]*)\" in my account$")

@@ -7,6 +7,7 @@ import com.java.cucumber.impl.CashSlot;
 /**
  * Created by mgupta on 9/4/16.
  */
+// Sharing state between steps
 public class KnowsMyDomain {
 
     private Account  testAccount;
